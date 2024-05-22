@@ -1,2 +1,1 @@
-# AudioEncDec
-Audio Encyption and Decryption using MATLAB 
+Audio signal encryption involves convertingtheaudio data into a scrambled format usingencryptionkeys.This process masks the original content,makingit unreadable to unauthorized users.Decryptionreverses this process,using the correspondingkeystotransform the encrypted audio back intoitsoriginalform.Decryption requires the correct keystoaccessand interpret the encrypted audio,allowingauthorized users to get back the original contentsafeand secure.The encryption and decryptionprocessesare crucial components of secureaudiocommunication system ensuring confidentiality.
