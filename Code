@@ -1,0 +1,55 @@
+//MATLAB
+Code of Encryption:
+file_path = "C:\Users\dsplab\Downloads\file_example_WAV_10MG.wav";
+//Actual path of our audio signal
+[audioInput, Fs] = audioread(file_path);
+//audioread is used to read the audio file specified by our path.Audio input contains audio data and Fs is thesamplingfrequency of our audio.
+if size(audioInput, 2) > 1
+audioInput = audioInput(:, 1);
+End
+//This conditional statement checks if the audio has multiple channels. If it does, it selects only the datafromthefirstchannel and assigns it to audioInput. key = randi([0, 1], size(audioInput));
+//A random binary key is generated using the randi function. The size of the key matches the size of our audioInput.audioInput = audioInput / max(abs(audioInput));
+key = key / max(abs(key));
+//Both the audioInput and the key are normalized to ensure they have values between -1 and 1. scalingFactor = 127;
+scaledAudioInput = round(scalingFactor * audioInput);
+scaledKey = round(scalingFactor * key);
+//A scaling factor is defined, and both the audioInput and the key are scaled by this factor and roundedoff tointegersencryptedAudio = bitxor(int8(scaledAudioInput), int8(scaledKey));
+//The bitxor function performs a bitwise XOR operation between the scaled audio input and thescaledkeytoencrypt the audio
+encryptedAudio = double(encryptedAudio) / scalingFactor;
+//The encrypted audio is converted back to double precision and normalized by dividing by the scaling factor. time = (0:length(audioInput) - 1) / Fs;
+//A time vector is created based on the length of the audio input and the sampling frequency to represent thetimeaxis for plotting of our encrypted signal. figure;
+subplot(2, 1, 1);
+plot(time, audioInput);
+title('Original Audio Signal');
+xlabel('Time (seconds)');
+ylabel('Amplitude');
+subplot(2, 1, 2);
+plot(time, encryptedAudio);
+title('Encrypted Audio Signal');
+xlabel('Time (seconds)');
+ylabel('Amplitude');
+sound(encryptedAudio, Fs); % Encrypted audio
+//The encrypted audio is played using the sound function with the sampling frequency Fs. audiowrite('encrypted_audio.wav', encryptedAudio, Fs);
+save('encryption_key.mat', 'key');
+//The encryption key is saved to a MAT file named encryption_key.mat. These lines ensure that the encrypted audio and the encryption key are saved for later decryption. Code of Decryption:
+[encryptedAudio, Fs] = audioread("C:\Users\dsplab\Downloads\sur_enc.wav");
+//The encrypted audio is read from the specified path
+load("C:\Users\dsplab\Downloads\dfhfh.mat");
+//The Encryption key is loaded from the specified path. scalingFactor = 127;
+scaledEncryptedAudio = round(scalingFactor * encryptedAudio);
+scaledKey = round(scalingFactor * key);
+//A scaling factor is defined, and both the encrypted audio and the key are scaled by this factor androundedoff to integers. decryptedAudio = bitxor(int8(scaledEncryptedAudio), int8(scaledKey));
+//The bitxor function performs a bitwise XOR operation between the scaled encrypted audio and thescaledkeytodecrypt the audio. decryptedAudio = double(decryptedAudio) / scalingFactor;
+//The decrypted audio is converted back to double precision and normalized by dividing by the scaling factor. cutoffFrequency = 4000;
+normalizedCutoff = cutoffFrequency / (Fs / 2);
+filterOrder = 8;
+b = fir1(filterOrder, normalizedCutoff, 'low');
+filteredDecryptedAudio = filter(b, 1, decryptedAudio);
+//A low-pass FIR filter is designed with a cutoff frequency of 4000 Hz, an order of 8, and applied to the decryptedaudiousing the filter function. time = (0:length(filteredDecryptedAudio) - 1) / Fs;
+//A time vector is created based on the length of the filtered decrypted audio and the sampling frequencytorepresentthe time axis for plotting of the decrypted signal. figure;
+plot(time, filteredDecryptedAudio);
+title('Filtered Decrypted Audio Signal');
+xlabel('Time (seconds)');
+ylabel('Amplitude');
+sound(filteredDecryptedAudio, Fs);
+//The filtered decrypted audio is played using the sound function with the sampling frequency Fs.
